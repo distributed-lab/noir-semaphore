@@ -1,0 +1,59 @@
+{
+    "name": "@noir-semaphore/proof",
+    "version": "1.0.0",
+    "description": "A library to generate and verify Semaphore proofs.",
+    "type": "module",
+    "license": "MIT",
+    "main": "dist/index.browser.js",
+    "types": "dist/types/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/types/index.d.ts",
+            "node": {
+                "require": "./dist/index.node.cjs",
+                "default": "./dist/index.node.js"
+            },
+            "browser": "./dist/index.browser.js",
+            "default": "./dist/index.browser.js"
+        }
+    },
+    "files": [
+        "dist/",
+        "src/",
+        "LICENSE"
+    ],
+    "repository": "https://github.com/distributed-lab/noir-semaphore",
+    "homepage": "https://github.com/distributed-lab/noir-semaphore/tree/main/packages/proof",
+    "bugs": {
+        "url": "https://github.com/distributed-lab/noir-semaphore.git/issues"
+    },
+    "scripts": {
+        "build": "rimraf dist && yarn build:browser && yarn build:node",
+        "build:browser": "rollup -c rollup.browser.config.ts --configPlugin typescript",
+        "build:node": "rollup -c rollup.node.config.ts --configPlugin typescript",
+        "prepublishOnly": "yarn build"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "devDependencies": {
+        "@rollup/plugin-alias": "^5.1.0",
+        "@rollup/plugin-json": "^6.1.0",
+        "@rollup/plugin-typescript": "^11.1.6",
+        "@types/snarkjs": "^0",
+        "rimraf": "^5.0.5",
+        "rollup": "^4.12.0",
+        "rollup-plugin-cleanup": "^3.2.1"
+    },
+    "peerDependencies": {
+        "@semaphore-protocol/group": "4.9.1",
+        "@semaphore-protocol/identity": "4.9.1"
+    },
+    "dependencies": {
+        "@semaphore-protocol/utils": "4.9.1",
+        "@zk-kit/artifacts": "1.8.0",
+        "@zk-kit/utils": "1.3.0",
+        "ethers": "6.13.4",
+        "snarkjs": "0.7.4"
+    }
+}

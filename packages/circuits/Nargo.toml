@@ -1,0 +1,9 @@
+[package]
+name = "semaphore"
+type = "bin"
+authors = ["Distributed Lab"]
+description = "Semaphore v4 in Noir"
+license = "MIT"
+
+[dependencies]
+eddsa = { git = "https://github.com/noir-lang/eddsa", tag = "v0.1.1" }
