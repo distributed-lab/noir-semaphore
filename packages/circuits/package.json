@@ -1,11 +1,11 @@
 {
-    "name": "@noir-semaphore/contracts",
+    "name": "@noir-semaphore/circuits",
     "version": "1.0.0",
-    "description": "Semaphore contracts with Barretenberg verifier to manage groups and broadcast anonymous signals.",
+    "description": "Semaphore Noir circuits to generate zero-knowledge proofs.",
     "license": "MIT",
     "files": [
-        "Semaphore.sol",
-        "**/*.sol"
+        "src",
+        "Nargo.toml"
     ],
     "keywords": [
         "blockchain",
@@ -22,15 +22,11 @@
         "proof-of-membership"
     ],
     "repository": "https://github.com/distributed-lab/noir-semaphore",
-    "homepage": "https://github.com/distributed-lab/noir-semaphore/tree/main/packages/contracts",
+    "homepage": "https://github.com/distributed-lab/noir-semaphore/tree/main/packages/circuits",
     "bugs": {
         "url": "https://github.com/distributed-lab/noir-semaphore/issues"
     },
     "publishConfig": {
         "access": "public"
-    },
-    "dependencies": {
-        "@zk-kit/lean-imt.sol": "2.0.0",
-        "@semaphore-protocol/contracts": "4.9.1"
     }
 }

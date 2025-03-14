@@ -81,12 +81,7 @@ export default async function generateProof(
         merkleTreeDepth = merkleProofLength !== 0 ? merkleProofLength : 1
     }
 
-    // If the Snark artifacts are not defined they will be automatically downloaded.
-    snarkArtifacts ??= await maybeGetSnarkArtifacts(Project.SEMAPHORE, {
-        parameters: [merkleTreeDepth],
-        version: "4.0.0"
-    })
-    const { wasm, zkey } = snarkArtifacts
+    const {noir, backend} = await getOrchestrators()
 
     // The index must be converted to a list of indices, 1 for each tree level.
     // The missing siblings can be set to 0, as they won't be used in the circuit.
@@ -101,25 +96,23 @@ export default async function generateProof(
         }
     }
 
-    const { proof, publicSignals } = await groth16.fullProve(
-        {
-            secret: identity.secretScalar,
-            merkleProofLength,
-            merkleProofIndices,
-            merkleProofSiblings,
-            scope: hash(scope),
-            message: hash(message)
-        },
-        wasm,
-        zkey
-    )
+    const { witness } = await noir.execute(  {
+        secret: identity.secretScalar,
+        merkleProofLength,
+        merkleProofIndices,
+        merkleProofSiblings,
+        scope: hash(scope),
+        message: hash(message)
+    } );
+
+    const proof = await backend.generateProof(witness);
 
     return {
         merkleTreeDepth,
         merkleTreeRoot: merkleProof.root.toString(),
-        nullifier: publicSignals[1],
+        nullifier: witness[1],
         message: message.toString() as NumericString,
         scope: scope.toString() as NumericString,
-        points: packGroth16Proof(proof)
+        proof: proof
     }
 }

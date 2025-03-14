@@ -25,7 +25,7 @@
     "repository": "https://github.com/distributed-lab/noir-semaphore",
     "homepage": "https://github.com/distributed-lab/noir-semaphore/tree/main/packages/proof",
     "bugs": {
-        "url": "https://github.com/distributed-lab/noir-semaphore.git/issues"
+        "url": "https://github.com/distributed-lab/noir-semaphore/issues"
     },
     "scripts": {
         "build": "rimraf dist && yarn build:browser && yarn build:node",
@@ -54,6 +54,10 @@
         "@zk-kit/artifacts": "1.8.0",
         "@zk-kit/utils": "1.3.0",
         "ethers": "6.13.4",
-        "snarkjs": "0.7.4"
+        "snarkjs": "0.7.4",
+        "@noir-lang/noir_wasm": "1.0.0-beta.2",
+        "@noir-lang/noir_js": "1.0.0-beta.2",
+        "@aztec/bb.js": "0.72.1",
+        "@noir-semaphore/circuits": "1.0.0"
     }
 }

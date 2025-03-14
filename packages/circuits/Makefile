@@ -1,41 +1,49 @@
-# Default scheme if not provided on command line
+SHELL := /bin/bash
+
+BB ?= bb
 SCHEME ?= ultra_honk
 
-# Common directories/files
-BUILD_DIR        = ./target
-SEMAPHORE_JSON   = $(BUILD_DIR)/semaphore.json
-SEMAPHORE_GZ     = $(BUILD_DIR)/semaphore.gz
-PROOF            = $(BUILD_DIR)/proof
-VK               = $(BUILD_DIR)/vk
-CONTRACT 		 = $(BUILD_DIR)/Verifier.sol
+BUILD_DIR       := ./target
+SEMAPHORE_JSON  := $(BUILD_DIR)/semaphore.json
+SEMAPHORE_GZ    := $(BUILD_DIR)/semaphore.gz
+PROOF           := $(BUILD_DIR)/proof
+VK              := $(BUILD_DIR)/vk
+CONTRACT        := $(BUILD_DIR)/Verifier.sol
 
-.PHONY: prove vk verify gates clean
+.DEFAULT_GOAL := all
+
+.PHONY: all prove vk verify gates contract clean
+
+all: prove vk verify
 
 prove:
-	bb prove --scheme $(SCHEME) \
-	         -b $(SEMAPHORE_JSON) \
-	         -w $(SEMAPHORE_GZ) \
-	         -o $(PROOF)
+	$(BB) prove --scheme $(SCHEME) \
+	            -b $(SEMAPHORE_JSON) \
+	            -w $(SEMAPHORE_GZ) \
+	            -o $(PROOF)
 
 vk:
-	bb write_vk --scheme $(SCHEME) \
-	            -b $(SEMAPHORE_JSON) \
-	            -o $(VK)
+	$(BB) write_vk --scheme $(SCHEME) \
+	               -b $(SEMAPHORE_JSON) \
+	               -o $(VK)
 
 verify: prove vk
-	bb verify --scheme $(SCHEME) \
-	          -k $(VK) \
-	          -p $(PROOF)
+	$(BB) verify --scheme $(SCHEME) \
+	             -k $(VK) \
+	             -p $(PROOF)
 
 gates:
-	bb gates --scheme $(SCHEME) \
-	         -b $(SEMAPHORE_JSON)
+	$(BB) gates --scheme $(SCHEME) \
+	            -b $(SEMAPHORE_JSON)
+
+
+contract: contract_$(SCHEME)
 
 contract_plonk:
-	bb contract -o $(CONTRACT)
+	$(BB) contract -o $(CONTRACT)
 
-contract_honk:
-	bb contract_ultra_honk -o $(CONTRACT)
+contract_ultra_honk:
+	$(BB) contract_ultra_honk -o $(CONTRACT)
 
 clean:
 	rm -f $(PROOF) $(VK) $(CONTRACT)
