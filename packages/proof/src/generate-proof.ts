@@ -7,6 +7,9 @@ import { type NumericString } from "snarkjs"
 import hash from "./hash"
 import toBigInt from "./to-bigint"
 import type { SemaphoreProof } from "./types"
+import { Noir } from '@noir-lang/noir_js';
+import { UltraPlonkBackend, UltraHonkBackend } from '@aztec/bb.js';
+import { getOrchestrators } from './circuit';
 
 /**
  * It generates a Semaphore proof, i.e. a zero-knowledge proof that an identity that
@@ -21,12 +24,14 @@ import type { SemaphoreProof } from "./types"
  * Finally, the artifacts themselves can be passed manually with file paths,
  * or they will be automatically fetched.
  * Please keep in mind that groups with 1 member or 2 members cannot be considered anonymous.
+
  * @param identity The Semaphore identity.
  * @param groupOrMerkleProof The Semaphore group or its Merkle proof.
  * @param message The Semaphore message.
  * @param scope The Semaphore scope.
  * @param merkleTreeDepth The depth of the tree with which the circuit was compiled.
- * @param snarkArtifacts See {@link https://zkkit.pse.dev/interfaces/_zk_kit_utils.SnarkArtifacts.html | SnarkArtifacts}.
+ * @param noir The compiled Noir circuit.
+ * @param backend The compiled UltraPlonk or UltraHonk backend. If backend not supplied, by default UltraHonk will be used.
  * @returns The Semaphore proof ready to be verified.
  */
 export default async function generateProof(
@@ -35,7 +40,8 @@ export default async function generateProof(
     message: BigNumberish | Uint8Array | string,
     scope: BigNumberish | Uint8Array | string,
     merkleTreeDepth?: number,
-    snarkArtifacts?: SnarkArtifacts
+    noir?: Noir,
+    backend?: UltraHonkBackend | UltraPlonkBackend,
 ): Promise<SemaphoreProof> {
     requireDefined(identity, "identity")
     requireDefined(groupOrMerkleProof, "groupOrMerkleProof")
@@ -51,8 +57,12 @@ export default async function generateProof(
         requireNumber(merkleTreeDepth, "merkleTreeDepth")
     }
 
-    if (snarkArtifacts) {
-        requireObject(snarkArtifacts, "snarkArtifacts")
+    if (noir) {
+        requireObject(noir, "noir")
+    }
+
+    if (backend) {
+        requireObject(backend, "backend")
     }
 
     // Message and scope can be strings, numbers or buffers (i.e. Uint8Array).
@@ -81,7 +91,11 @@ export default async function generateProof(
         merkleTreeDepth = merkleProofLength !== 0 ? merkleProofLength : 1
     }
 
-    const {noir, backend} = await getOrchestrators()
+    if (!noir || !backend) {
+        const [defaultNoir, defaultBackend] = await getOrchestrators();
+        noir = noir ?? defaultNoir;
+        backend = backend ?? defaultBackend;
+    }
 
     // The index must be converted to a list of indices, 1 for each tree level.
     // The missing siblings can be set to 0, as they won't be used in the circuit.

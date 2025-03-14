@@ -63,7 +63,7 @@ const proof3 = await generateProof(identity3, group, message, scope, 20, {
 ### Verify Proof
 
 ```typescript
-import { verifyProof } from "@semaphore-protocol/proof"
+import { verifyProof } from "@noir-semaphore/proof"
 
 await verifyProof(proof1)
 ```

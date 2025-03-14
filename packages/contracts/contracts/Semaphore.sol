@@ -135,7 +135,7 @@ contract Semaphore is ISemaphore, SemaphoreGroups {
             proof.nullifier,
             proof.message,
             proof.scope,
-            proof.points
+            proof.proof
         );
     }
 

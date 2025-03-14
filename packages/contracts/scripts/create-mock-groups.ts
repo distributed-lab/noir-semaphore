@@ -1,6 +1,6 @@
 import { Group } from "@semaphore-protocol/group"
 import { Identity } from "@semaphore-protocol/identity"
-import { generateProof } from "@semaphore-protocol/proof"
+import { generateProof } from "@noir-semaphore/proof"
 import { ethers, hardhatArguments } from "hardhat"
 import { getDeployedContractAddress } from "./utils"
 

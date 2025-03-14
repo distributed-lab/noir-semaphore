@@ -43,6 +43,7 @@
     },
     "dependencies": {
         "@zk-kit/lean-imt.sol": "2.0.0",
-        "@semaphore-protocol/contracts": "4.9.1"
+        "@semaphore-protocol/contracts": "4.9.1",
+        "@noir-semaphore/proof": "1.0.0"
     }
 }
